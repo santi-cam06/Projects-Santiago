@@ -32,14 +32,14 @@ From this point on, make sure that your present working directory on your termin
 
 3. **Install Dependencies**:
    - Upgrade `pip` and install required libraries:
-     ```sh
+     ```powershell
      python -m pip install --upgrade pip
      python -m pip install -r requirements.txt
      ```
 
 4. **Environment Configuration**:
    - Create a local `.env` file by copying the template file `.env.example`. This file contains all required API keys and configuration macros for the application, read it carefully:
-   ```sh
+   ```powershell
      # On Windows (Command Prompt)
      copy .env.example .env
      # On macOS/Linux or PowerShell
@@ -163,7 +163,7 @@ As well make sure you have uploaded ONE **PDF resume**.
  
 **Command**
 
-```sh
+```powershell
 # Windows
 python -m src.advisor.app_advisor "<path_to_job_posting>"
 # macOS/Linux
@@ -235,7 +235,7 @@ The application report was successfully written to the reports folder. Would you
 
 Once you are finished working with the application, you can deactivate the virtual environment to return to your global Python context:
 
-```sh
+```powershell
 deactivate
 ```
 
