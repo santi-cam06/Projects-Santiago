@@ -1,0 +1,35 @@
+# Environment variables (Sensitive)
+.env
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+ENV/
+
+
+# Project specific logs and temporary outputs
+**/debug.txt
+
+# Personal data files
+data/jobs_JSON/*
+!data/jobs_JSON/.gitkeep
+
+
+data/user/*.pdf
+!data/user/.gitkeep
+data/user/resume/*
+!data/user/resume/.gitkeep
+
+
+reports/*.md
+!reports/.gitkeep
+
+src/advisor/user_jobpost_JSON/*
+!src/advisor/user_jobpost_JSON/.gitkeep
+
+
+
+
+
