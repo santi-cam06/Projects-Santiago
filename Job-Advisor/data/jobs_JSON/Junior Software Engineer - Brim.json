@@ -1,0 +1,25 @@
+{
+  "job_title": "Junior Software Engineer",
+  "company_name": "Brim Financial",
+  "work_modality": "remote",
+  "required_skills": [
+    "PHP",
+    "Python",
+    "RESTful APIs",
+    "scalable architecture"
+  ],
+  "nice_have_skills": [],
+  "experience_level": "0 - 2 years",
+  "education_requirements": "Not listed.",
+  "salary": "Not listed.",
+  "key_responsibilities": [
+    "Design, build, and maintain PHP and Python services",
+    "Implement RESTful APIs across the full stack",
+    "Focus on scalability, security, and maintainability"
+  ],
+  "relevant_data": [
+    "Brim is a fintech company building an operating system for credit cards and payments.",
+    "The company has been recognized as a great place to work and offers a supportive remote environment.",
+    "Brim Financial provides an end-to-end credit-card-as-a-service platform, helping banks and fintechs launch and operate financial products."
+  ]
+}
