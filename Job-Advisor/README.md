@@ -12,16 +12,18 @@ LLMs used in this application:
 
 Before running the application, follow these steps:
 
-1. **Install Python** (If not already installed):
+1. For this repository, create a **GitHub Codespace (Cloud)** OR clone it locally and open it with your preferred code editor (e.g. Visual Studio Code, ...).
+
+2. **Install Python** (If not already installed):
    - **Windows**: Download the latest installer from [python.org](https://www.python.org/downloads/windows/) or use: `winget install Python.Python.3.12`
    - **macOS**: Use Homebrew: `brew install python`
    - **Linux (Ubuntu/Debian)**: `sudo apt update && sudo apt install python3 python3-venv python3-pip`
    - **Cloud Workspaces (Codespaces, etc.)**: Python is usually pre-installed. Run `python3 --version` to verify and skip this step.
 
-2. **Create and Activate a Virtual Environment**:
+3. **Create and Activate a Virtual Environment**:
 
 >[!IMPORTANT]
-From this point on, make sure that your present working directory on your terminal is the root directory of the application. 
+From this point on, make sure that your present working directory on your terminal is the root directory of the application: `.../Job-Advisor`. 
 
    - Create the environment:
      - **Windows**: `python -m venv .venv`
@@ -30,14 +32,14 @@ From this point on, make sure that your present working directory on your termin
      - **Windows**: `.\.venv\Scripts\activate`
      - **macOS/Linux**: `source .venv/bin/activate`
 
-3. **Install Dependencies**:
+4. **Install Dependencies**:
    - Upgrade `pip` and install required libraries:
      ```powershell
      python -m pip install --upgrade pip
      python -m pip install -r requirements.txt
      ```
 
-4. **Environment Configuration**:
+5. **Environment Configuration**:
    - Create a local `.env` file by copying the template file `.env.example`. This file contains all required API keys and configuration macros for the application, read it carefully:
    ```powershell
      # On Windows (Command Prompt)
@@ -48,9 +50,9 @@ From this point on, make sure that your present working directory on your termin
 > [!IMPORTANT]
 Always **copy** the template. Do not rename `.env.example` directly, as it must remain in the repository as a reference for required environment variables.
 
-   - Open the newly created `.env` file and fill in your API keys (e.g., `OPENROUTER_API_KEY, ...`) and adjust optional configuration settings as needed. The application **will not** function without a valid `.env` file in the **project root**.
+   - Open the newly created `.env` file and fill in your API keys (e.g., `OPENROUTER_API_KEY, ...`) and adjust optional configuration settings as needed. The application **will not** function without a valid `.env` file in the **application root** (.../Job-Advisor).
 
-5. **Main Directories Glossary**:
+6. **Main Directories Glossary**:
    - `./data/`: Contains subdirectories for input documents and main database.
    - `./reports/`: Target directory for LLM-generated Markdown reports.
    - `./src/`: Scripts with applications behaviour and system prompts.
@@ -71,7 +73,7 @@ The content inside `./src/advisor/user_jobpost_JSON/`, `./reports/` and `./data/
 - First 2 phases should be run only for engineering purposes, the last phase is the end-user application.
 
 >[!IMPORTANT]
-**Reminder:** All the following terminal commands you'll see must be executed from the root of the project.
+**Reminder:** All the following terminal commands you'll see must be executed from the root of the application.
 
 
 ## Phase 1: Market Analysis Report
@@ -236,6 +238,7 @@ The application report was successfully written to the reports folder. Would you
 Once you are finished working with the application, you can deactivate the virtual environment to return to your global Python context:
 
 ```powershell
+# Terminal
 deactivate
 ```
 
