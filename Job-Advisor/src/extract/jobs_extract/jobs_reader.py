@@ -309,7 +309,7 @@ def schema_parse(pdf_path: str) -> JobPosting:
     raise RuntimeError("schema_parse() did not return a JobPosting and did not raise an error earlier.")
 
 
-
+# Parses a PDF according to JobPosting schema and returns it
 # Handles limited attempts for the LLM to parse
 def parse_pdf(pdf_path: Path) -> JobPosting:
     string_path = str(pdf_path)
@@ -332,7 +332,7 @@ def parse_pdf(pdf_path: Path) -> JobPosting:
         raise error
         
 
-# Reads PDFs in data/jobs_postings and generates JSON files from them
+# Reads PDFs in data/jobs_postings (if present) and generates JSON files from them
 # into data/jobs_JSON
 def jobs_reader() -> list[JobPosting]:
 
@@ -347,63 +347,65 @@ def jobs_reader() -> list[JobPosting]:
     try:
         # List of paths to PDFs in alphabet order (same as in directory)
         pdf_paths = sorted((BASE_DIR / "data" / "jobs_postings").rglob("*.pdf"))
-        if len(pdf_paths) == 0:
-            raise ValueError("No pdf files found in data directory.")
-        print(f"[DEBUG] Found {len(pdf_paths)} job posting PDFs to process", file=sys.stderr)
 
-        # Creates dir if it does not exist
-        JOBS_JSON_DIR.mkdir(parents=True, exist_ok=True)
+        # Verify if new PDFs were added in data/jobs_postings
+        if len(pdf_paths) > 0:
+            
+            print(f"[DEBUG] Found {len(pdf_paths)} potential job posting PDFs to process", file=sys.stderr)
 
-        # Sequentially process each PDF
-        for pdf_path in pdf_paths:
-            try:
-                
-                out_path = JOBS_JSON_DIR / f"{pdf_path.stem}.json"
-                
-                # If JSON already exists and is valid, skip re-processing this PDF
-                if out_path.exists():
-                    try:
-                        print(f"[DEBUG] Reading JSON file: {out_path}", file=sys.stderr)
-                        with open(out_path, "r", encoding="utf-8") as f:
-                            # If the JSON is correct, nothing happens, otherwise, load() raises
-                            json.load(f)
+            # Creates dir if it does not exist
+            JOBS_JSON_DIR.mkdir(parents=True, exist_ok=True)
 
-                        # Existing JSON is valid, so we skip this PDF
-                        print(f"[DEBUG] Skipping {pdf_path.name} (valid JSON exists).", file=sys.stderr)
-                        continue
-                    except Exception:
-                        # If JSON is missing/corrupt, fall through and re-generate it
-                        pass
-
-                # LLM response with parsed JobPosting 
-                job_posting = parse_pdf(pdf_path)
-                # Store in collection of JobPostings
-                results.append(job_posting)
-
-
-                # Write JSON file of JobPosting schema
+            # Sequentially process each PDF
+            for pdf_path in pdf_paths:
                 try:
-                    print(f"[DEBUG] Writing JSON file: {out_path}", file=sys.stderr)
-                    with open(out_path, "w", encoding="utf-8") as f:
-                        # Convert job schema into a dict
-                        job_dict = job_posting.model_dump(mode="json")
-                        # this method expects a python dict to convert it to JSON format
-                        json.dump(job_dict, f, indent=2)
-                except (OSError, TypeError) as error:
-                    raise RuntimeError(f"Failed to write JSON output: {out_path}") from error
 
-            except Exception as error:
-                failure_count += 1
-                print(f"[DEBUG] Error occured with {pdf_path.name}: {error}", file=sys.stderr)
-                if failure_count >= MAX_LLM_FAILURES:
-                    raise RuntimeError(
-                        f"Global LLM failure cap reached ({failure_count}). Last file {pdf_path.name} failed to parse."
-                    ) from error
-                
-                # Next pdf if failure_count not yet reached to max
-                continue
-            finally:
-                section_break()
+                    out_path = JOBS_JSON_DIR / f"{pdf_path.stem}.json"
+
+                    # If JSON already exists and is valid, skip re-processing this PDF
+                    if out_path.exists():
+                        try:
+                            print(f"[DEBUG] Reading JSON file: {out_path}", file=sys.stderr)
+                            with open(out_path, "r", encoding="utf-8") as f:
+                                # If the JSON is correct, nothing happens, otherwise, load() raises
+                                json.load(f)
+
+                            # Existing JSON is valid, so we skip this PDF
+                            print(f"[DEBUG] Skipping {pdf_path.name} (valid JSON exists).", file=sys.stderr)
+                            continue
+                        except Exception:
+                            # If JSON is missing/corrupt, fall through and re-generate it
+                            pass
+
+                    # LLM response with parsed JobPosting 
+                    job_posting = parse_pdf(pdf_path)
+                    # Store in collection of JobPostings
+                    results.append(job_posting)
+
+
+                    # Write JSON file of JobPosting schema
+                    try:
+                        print(f"[DEBUG] Writing JSON file: {out_path}", file=sys.stderr)
+                        with open(out_path, "w", encoding="utf-8") as f:
+                            # Convert job schema into a dict
+                            job_dict = job_posting.model_dump(mode="json")
+                            # this method expects a python dict to convert it to JSON format
+                            json.dump(job_dict, f, indent=2)
+                    except (OSError, TypeError) as error:
+                        raise RuntimeError(f"Failed to write JSON output: {out_path}") from error
+
+                except Exception as error:
+                    failure_count += 1
+                    print(f"[DEBUG] Error occured with {pdf_path.name}: {error}", file=sys.stderr)
+                    if failure_count >= MAX_LLM_FAILURES:
+                        raise RuntimeError(
+                            f"Global LLM failure cap reached ({failure_count}). Last file {pdf_path.name} failed to parse."
+                        ) from error
+
+                    # Next pdf if failure_count not yet reached to max
+                    continue
+                finally:
+                    section_break()
 
     except Exception as error:
         print(f"[DEBUG] jobs_reader() says: {error}", file=sys.stderr)

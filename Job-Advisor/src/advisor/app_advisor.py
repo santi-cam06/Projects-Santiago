@@ -61,7 +61,7 @@ class FilteredStderr:
 
 # Directory macros
 BASE_DIR = Path(__file__).resolve().parents[2]
-JOBS_POSTINGS_DIR = BASE_DIR / "data" / "jobs_postings"
+JOBS_JSON_DIR = BASE_DIR / "data" / "jobs_JSON"
 REPORTS_DIR = BASE_DIR / "reports"
 SCRIPT_DIR = Path(__file__).resolve().parent
 USER_JOBPOST_JSON_DIR = SCRIPT_DIR / "user_jobpost_JSON"
@@ -73,6 +73,7 @@ with open(SYS_PROMPT_FILE, "r", encoding="utf-8") as f:
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 # OpenAI client setup (OpenRouter endpoint)
 openai = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=OPENROUTER_API_KEY)
+
 
 def parse_user_jobpost(job_posting_path: str) -> JobPosting:
     if not job_posting_path:
@@ -95,17 +96,17 @@ def parse_user_jobpost(job_posting_path: str) -> JobPosting:
     return parse_pdf(src_path)
 
 
-# Copies the user job posting to the database
-def copy_jobpost(job_posting_path: str) -> Path:
+# Copies the user job posting JSON to the database
+def copy_jobpost(jobpost_json_path: Path) -> Path:
     # Assumes the caller already validated the path and file type.
-    src_path = Path(job_posting_path).expanduser()
+    src_path = Path(jobpost_json_path).expanduser()
 
-    JOBS_POSTINGS_DIR.mkdir(parents=True, exist_ok=True)
-    dest_path = JOBS_POSTINGS_DIR / src_path.name
+    JOBS_JSON_DIR.mkdir(parents=True, exist_ok=True)
+    dest_path = JOBS_JSON_DIR / f"{Path(src_path.stem)}.json"
 
     if dest_path.exists():
         raise FileExistsError(
-            f"Job posting already exists in {JOBS_POSTINGS_DIR}: {dest_path.name}"
+            f"Job posting already exists in {JOBS_JSON_DIR}: {dest_path.name}"
         )
 
     try:
@@ -363,7 +364,7 @@ def app_advisor():
         end_section()
 
         # Ask user whether to add their job posting to the database for enrichment.
-        existing_db_copy = JOBS_POSTINGS_DIR / Path(user_jobpost_path).expanduser().name
+        existing_db_copy = JOBS_JSON_DIR / f"{Path(user_jobpost_path).stem}.json"
         while True:
             user_choice = input(
                 "The application report was succesfully written to the reports folder.\n"
@@ -379,13 +380,13 @@ def app_advisor():
                     )
                     break
                 
-                dest_path = copy_jobpost(user_jobpost_path)
+                dest_path = copy_jobpost(out_path)
 
                 # Automatically stage and commit the new job posting to the repository
                 try:
                     subprocess.run(["git", "add", str(dest_path)], check=True, cwd=BASE_DIR)
                     subprocess.run(["git", "commit", "-m", "User contribution", str(dest_path)], check=True, cwd=BASE_DIR)
-                    print(f"[DEBUG] Git: Added and committed {dest_path.name}", file=sys.stderr)
+                    print(f"[DEBUG] Git: Added and committed {dest_path}", file=sys.stderr)
                 except Exception as git_error:
                     print(f"[DEBUG] Git contribution failed: {git_error}", file=sys.stderr)
 

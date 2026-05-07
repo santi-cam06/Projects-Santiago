@@ -103,8 +103,9 @@ This writes detailed debug logs to `./src/analysis/debug.txt`.
 - Generates a Market Analysis Report in `./reports/`, showing relevant data about the current IT (developers) industry scenario such as: key fields, skills, practices, academic requirements and other features, in order to assist with job seeking.
 
 > [!IMPORTANT] 
-> The application comes with a pre-populated database in `./data/jobs_JSON/` which is aimed for software developers. You can immediately generate reports without further configuration. If you wish to enrich the database further, you can add more job-posting **PDFs** to `./data/jobs_postings/` and re-run the script. The format name for the PDFs should be as: `[Role] - [Employer Name]` (e.g. Full Stack Developer - Tech & Geeks Inc.), this will help you visualize your files in a clean and ordered way.
+> The application comes with a pre-populated database in `./data/jobs_JSON/` which is aimed for software developers. You can immediately generate reports without further configuration. If you wish to enrich the database further, you can add more job-posting **PDFs** to `./data/jobs_postings/` and re-run the script, the system will parse their JSON versions. The format name for the PDFs should be as: `[Role] - [Employer Name]` (e.g. Full Stack Developer - Tech & Geeks Inc.), this will help you visualize your files in a clean and ordered way.
 
+Enriching the database will enhance the analysis of the LLM in charge of producing the Market Analysis Report.
 
 ## Phase 2: Resume Comparison
 
