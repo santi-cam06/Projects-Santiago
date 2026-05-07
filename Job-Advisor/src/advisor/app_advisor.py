@@ -370,7 +370,7 @@ def app_advisor():
 
                 if existing_db_copy.exists():
                     print(
-                        "It looks like we already had your job posting file in our database, "
+                        "\nIt looks like we already had your job posting file in our database, "
                         "do not hesitate to contribute with a new one next time!"
                     )
                     break
