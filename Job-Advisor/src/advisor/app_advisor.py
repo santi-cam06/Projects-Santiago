@@ -1,4 +1,4 @@
-import os, sys, shutil, json, atexit, re, subprocess
+import os, sys, shutil, json, atexit, re, subprocess, time
 from pathlib import Path
 from src.extract.jobs_extract.jobs_reader import parse_pdf, JobPosting
 
@@ -223,7 +223,11 @@ def compare_jobpost(jobpost_json_path: Path) -> None:
 
 def app_advisor():
 
+    # Start the timer
+    start_time = time.perf_counter()
     try:
+        
+
         # CLI usage: python -m src.advisor.app_advisor <path_to_job_posting> [--verbose]
         args = sys.argv[1:]
 
@@ -400,6 +404,8 @@ def app_advisor():
     except Exception as error:
         raise Exception(f"An error occurred: {error}")
     finally:
+        end_time = time.perf_counter()
+        print(f"Total time elapsed: {end_time - start_time}")
         cleanup_pycaches(BASE_DIR)
 
 

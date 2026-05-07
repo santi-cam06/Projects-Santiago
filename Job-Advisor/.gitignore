@@ -13,8 +13,8 @@ ENV/
 **/debug.txt
 
 # Personal data files
-data/jobs_JSON/*
-!data/jobs_JSON/.gitkeep
+data/jobs_postings/*
+!data/jobs_postings/.gitkeep
 
 
 data/user/*.pdf
